@@ -21,6 +21,7 @@ class main_window(QMainWindow):
         super(main_window,self).__init__()
         uic.loadUi("ftp.ui",self)
         self.main = main
+        self.setWindowTitle("DASHBOARD")
         self.init_default()
         self.init_ui_elements()
         self.init_pie_content()
@@ -249,9 +250,7 @@ class main_window(QMainWindow):
     
         if selected_indexes:
             row = selected_indexes[0].row()
-            print(row)
-
-        print(f"Selected Row {row + 1}:")
+            
         message = self.table2.item(row, 1).text()
 
         self.ied_json_display.setText(f"{self.latest_per_level[message]}")
@@ -263,9 +262,8 @@ class main_window(QMainWindow):
     
         if selected_indexes:
             row = selected_indexes[0].row()
-            print(row)
 
-        print(f"Selected Row {row + 1}:")
+
         message = self.table2.item(row, 1).text()
 
         self.ied_json_display.setText(f"{self.latest_per_level[message]}")
@@ -280,12 +278,11 @@ class main_window(QMainWindow):
     
         if selected_indexes:
             row = selected_indexes[0].row()
-            print(row)
         self.display_json3(row)
 
     def display_json3(self, row):
         self.ied_json_display.setText(f"{self.latest_logs_ftp[row-1]}")
-        self.ied_json_display.setStyleSheet("background-color:white; color:orange;")
+        self.ied_json_display.setStyleSheet("background-color:white; color:#8D0B41;")
 
 
 ########### main function ###########
