@@ -38,21 +38,18 @@ class main_window(QMainWindow):
         # Access placeholder widget by object name
         self.chart_container = self.findChild(QtWidgets.QWidget, "chartWidget")
 
-        # print("log_name:", self.log_name)
-        # print("size_log:", self.size_log)
-
-                # # Define the mapping of labels to colors
+                # Define the mapping of labels to colors
         # label_color_map = {
-        #     "low-risk": QColor("white"),
-        #     "medium-risk": QColor("yellow"),
-        #     "error": QColor("orange"),
-        #     "high-risk": QColor("red"),
+        #     "low-risk": QColor(255, 240, 133),
+        #     "medium-risk": QColor(254, 186, 23),
+        #     "error": QColor(250, 129, 47),
+        #     "high-risk": QColor(241, 103, 103),
         # }
 
         label_color_map = {
-            "DEBUG": QColor(255, 155, 23),
+            "DEBUG": QColor(254, 186, 23),
             "INFO": QColor(255, 240, 133),
-            "ERROR": QColor("orange"),
+            "ERROR": QColor(250, 129, 47),
             "CRITICAL": QColor(241, 103, 103),
         }
 
@@ -236,7 +233,6 @@ class main_window(QMainWindow):
             if level not in self.latest_per_level:
                 self.latest_per_level[level] = entry
 
-        print(self.latest_per_level)
 
         for row, entry in enumerate(self.latest_per_level.values()):
             self.table1.setItem(row, 0, QTableWidgetItem(entry.get("timestamp", "")))
