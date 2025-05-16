@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1317</width>
+    <width>1347</width>
     <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color:white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
@@ -151,9 +154,9 @@
    <widget class="QTableWidget" name="ftp">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>370</y>
-      <width>651</width>
+      <x>590</x>
+      <y>360</y>
+      <width>721</width>
       <height>181</height>
      </rect>
     </property>
@@ -196,13 +199,23 @@
      </property>
     </column>
    </widget>
+   <widget class="QWidget" name="chartWidget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>20</y>
+      <width>481</width>
+      <height>321</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1317</width>
+     <width>1347</width>
      <height>21</height>
     </rect>
    </property>
