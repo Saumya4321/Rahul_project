@@ -39,20 +39,12 @@ class main_window(QMainWindow):
         # Access placeholder widget by object name
         self.chart_container = self.findChild(QtWidgets.QWidget, "chartWidget")
 
-                # Define the mapping of labels to colors
-        # label_color_map = {
-        #     "low-risk": QColor(255, 240, 133),
-        #     "medium-risk": QColor(254, 186, 23),
-        #     "error": QColor(250, 129, 47),
-        #     "high-risk": QColor(241, 103, 103),
-        # }
 
         label_color_map = {
-            "DEBUG": QColor(255, 214, 10),
-            "INFO": QColor(255, 240, 133),
-            "ERROR": QColor(250, 129, 47),
-            "CRITICAL": QColor(241, 103, 103),
-            "WARNING":QColor(254, 186, 23)
+        "Low_Risk": QColor(255, 240, 133),
+        "Medium_Risk": QColor(255, 214, 10),
+        "Error": QColor(250, 129, 47),
+        "High_Risk": QColor(241, 103, 103),
         }
 
 
@@ -91,7 +83,7 @@ class main_window(QMainWindow):
      
 
     def init_pie_content(self):
-        with open("log_ftp_chart.json", "r") as f:
+        with open("final_ftp_log.json", "r") as f:
             log_entries = [json.loads(line) for line in f if line.strip()]
 
 
@@ -231,7 +223,7 @@ class main_window(QMainWindow):
     def set_ftp_table(self):
             # Load logs from JSON file
         logs = []
-        with open("log_ftp_table.json", "r") as f:
+        with open("final_ftp_log.json", "r") as f:
             for line in f:
                 if line.strip():
                     data = json.loads(line)
@@ -242,11 +234,10 @@ class main_window(QMainWindow):
 
 
         level_color_map = {
-        "DEBUG": QColor(255, 214, 10, 150),
-            "INFO": QColor(255, 240, 133, 150),
-            "ERROR": QColor(250, 129, 47, 150),
-            "CRITICAL": QColor(241, 103, 103, 150),
-            "WARNING":QColor(254, 186, 23, 150)
+        "Low_Risk": QColor(255, 240, 133, 150),
+        "Medium_Risk": QColor(255, 214, 10, 150),
+        "Error": QColor(250, 129, 47, 150),
+        "High_Risk": QColor(241, 103, 103, 150),
         }
 
         
