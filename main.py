@@ -48,10 +48,11 @@ class main_window(QMainWindow):
         # }
 
         label_color_map = {
-            "DEBUG": QColor(254, 186, 23),
+            "DEBUG": QColor(255, 214, 10),
             "INFO": QColor(255, 240, 133),
             "ERROR": QColor(250, 129, 47),
             "CRITICAL": QColor(241, 103, 103),
+            "WARNING":QColor(254, 186, 23)
         }
 
 
@@ -173,11 +174,59 @@ class main_window(QMainWindow):
         self.ftp.itemSelectionChanged.connect(self.handle_row_selection3)
 
         self.ied_json_display = self.findChild(QLabel,"ied_json_display")
+        self.set_dummy_data()
 
         self.set_ftp_table()
         self.ied_data()
 
     
+    def set_colors_ied_1(self):
+        row_colors = [
+            QColor(202, 240, 248), # light blue
+        QColor(144, 224, 239),  
+        QColor(0, 180, 216),  # darker yellow
+        ]
+
+        for row in range(self.table1.rowCount() + 1):
+            color = row_colors[row % len(row_colors)]
+            for col in range(self.table1.columnCount()):
+                item = self.table1.item(row, col)
+                if item:
+                    item.setBackground(color)
+
+
+
+    def set_colors_ied_2(self):
+        row_colors = [
+            QColor(236, 250, 229), # pista green
+        QColor(221, 246, 210),  
+        QColor(202, 232, 189),  # military green
+        ]
+
+        for row in range(self.table1.rowCount() + 1):
+            color = row_colors[row % len(row_colors)]
+            for col in range(self.table2.columnCount()):
+                item = self.table2.item(row, col)
+                if item:
+                    item.setBackground(color)
+
+
+    def set_colors_ftp_table(self):
+        row_colors = [
+        QColor(220, 255, 220),  
+        QColor(255, 255, 200),  
+        QColor(255, 220, 180),  
+        QColor(255, 200, 200),  
+        QColor(200, 220, 255),  
+        ]
+
+        for row in range(self.table1.rowCount()):
+            color = row_colors[row % len(row_colors)]
+            for col in range(self.table1.columnCount()):
+                item = self.table1.item(row, col)
+                if item:
+                    item.setBackground(color)
+
 
     def set_ftp_table(self):
             # Load logs from JSON file
@@ -192,6 +241,18 @@ class main_window(QMainWindow):
                         logs.append(data)
 
 
+        level_color_map = {
+        "DEBUG": QColor(255, 214, 10, 150),
+            "INFO": QColor(255, 240, 133, 150),
+            "ERROR": QColor(250, 129, 47, 150),
+            "CRITICAL": QColor(241, 103, 103, 150),
+            "WARNING":QColor(254, 186, 23, 150)
+        }
+
+        
+
+
+
         # Sort logs by timestamp (latest first)
         logs_sorted = sorted(logs, key=lambda x: x.get("timestamp", ""), reverse=True)
 
@@ -200,10 +261,20 @@ class main_window(QMainWindow):
 
         for row, log in enumerate(self.latest_logs_ftp):
             self.ftp.setItem(row, 0, QTableWidgetItem(log.get("timestamp", "")))
-            self.ftp.setItem(row, 1, QTableWidgetItem(log.get("Protocol", "")))
+            self.ftp.setItem(row, 1, QTableWidgetItem(log.get("level", "")))
             self.ftp.setItem(row, 2, QTableWidgetItem(log.get("message", "")))
             self.ftp.setItem(row, 3, QTableWidgetItem(str(log.get("Attacker IP", ""))))
             self.ftp.setItem(row, 4, QTableWidgetItem(str(log.get("Attacker Port", ""))))
+
+            # Set background color based on level
+            level = log.get("level", "UNKNOWN")
+            row_color = level_color_map.get(level, QColor(240, 240, 240))  # fallback color
+            for col in range(self.ftp.columnCount()):
+                item = self.ftp.item(row, col)
+                if item:
+                    item.setBackground(row_color)
+
+
 
 
     def ied_data(self):
@@ -243,7 +314,26 @@ class main_window(QMainWindow):
             self.table2.setItem(row, 0, QTableWidgetItem(entry.get("timestamp", "")))
             self.table2.setItem(row, 1, QTableWidgetItem(entry.get("goose-type", "")))
             self.table2.setItem(row, 2, QTableWidgetItem(entry.get("message", "")))
+        
+        self.set_colors_ied_1()
+        self.set_colors_ied_2()
 
+    def set_dummy_data(self):
+         # Add 3 rows of example data
+        data = [
+            ("10:01 AM", "INFO", "Startup complete"),
+            ("10:05 AM", "WARNING", "Voltage spike detected"),
+            ("10:10 AM", "other", "Connection lost")
+        ]
+
+        for row_index, (time, type_, message) in enumerate(data):
+            self.table1.setItem(row_index, 0, QTableWidgetItem(time))
+            self.table1.setItem(row_index, 1, QTableWidgetItem(type_))
+            self.table1.setItem(row_index, 2, QTableWidgetItem(message))
+
+            self.table2.setItem(row_index, 0, QTableWidgetItem(time))
+            self.table2.setItem(row_index, 1, QTableWidgetItem(type_))
+            self.table2.setItem(row_index, 2, QTableWidgetItem(message))
 
     def handle_row_selection1(self):
         selected_indexes = self.table1.selectionModel().selectedRows()
