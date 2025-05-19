@@ -6,7 +6,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
 from PyQt5.QtGui import QPainter
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 import json
 from collections import Counter
 from PyQt5.QtGui import QColor
@@ -24,8 +24,17 @@ class main_window(QMainWindow):
         self.setWindowTitle("DASHBOARD")
         self.init_default()
         self.init_ui_elements()
-        self.init_pie_content()
         self.init_chart()
+        self.init_pie_content()
+        self.set_chart()
+
+        self.refresh_timer = QTimer(self)
+        self.refresh_timer.timeout.connect(self.refreshing_dashboard)
+        self.refresh_timer.start(3000) # in ms
+
+        self.chart_timer = QTimer(self)
+        self.chart_timer.timeout.connect(self.ied_data)
+        self.chart_timer.start(3000) # in ms
    
 
         self.show()
@@ -34,55 +43,64 @@ class main_window(QMainWindow):
         self.log_name = []
         self.size_log = []
         self.latest_per_level = OrderedDict()
+        self.latest_logs_ftp = []
+        self.count = 1
+        self.count_chart = 1
+        self.count_ftp = 1
+
+    def refreshing_dashboard(self):
+        self.ied_data()
+        self.set_ftp_table()
+        self.init_pie_content()
+        self.set_chart()
 
     def init_chart(self):
         # Access placeholder widget by object name
         self.chart_container = self.findChild(QtWidgets.QWidget, "chartWidget")
 
+        # Create the series and chart once
+        self.series = QPieSeries()
+        self.chart = QChart()
+        self.chart.addSeries(self.series)
+        self.chart.setTitle("Log Distribution")
+        self.chart.legend().setAlignment(Qt.AlignBottom)
 
+        self.chart_view = QChartView(self.chart)
+        self.chart_view.setRenderHint(QPainter.Antialiasing)
+        self.chart_view.setMinimumSize(350, 350)
+
+        # Set layout
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.chart_view)
+        self.chart_container.setLayout(layout)
+
+        self.series.setPieSize(1)  # Optional visual tweak
+
+    def set_chart(self):
         label_color_map = {
         "Low_Risk": QColor(255, 240, 133),
         "Medium_Risk": QColor(255, 214, 10),
         "Error": QColor(250, 129, 47),
         "High_Risk": QColor(241, 103, 103),
-        }
+    }
 
-
-
-        # Create pie chart
-        series = QPieSeries()
+        self.series.clear()
 
         for i in range(len(self.log_name)):
-            slice = series.append(self.log_name[i], self.size_log[i])
             label = self.log_name[i]
-            # print(label)
+            value = self.size_log[i]
+            slice = self.series.append(label, value)
+
             if label in label_color_map:
                 slice.setBrush(label_color_map[label])
 
             slice.setLabelVisible(True)
 
-
-
-        chart = QChart()
-        chart.addSeries(series)
-        chart.setTitle("Log Distribution")
-        chart.legend().setAlignment(Qt.AlignBottom)
-
-        chart_view = QChartView(chart)
-        chart_view.setRenderHint(QPainter.Antialiasing)
-
-        # Replace chart_widget with chart_view
-        layout = QtWidgets.QVBoxLayout()
-        layout.addWidget(chart_view)
-        self.chart_container.setLayout(layout)
-        chart_view.setMinimumSize(350, 350)  # Try bigger values like 500x500
-
-
-        series.setPieSize(1)  # Default is 0.7; max is 1.0
-
      
 
     def init_pie_content(self):
+        print(f"Refreshing graph {self.count_chart}")
+        log_entries = []
         with open("final_ftp_log.json", "r") as f:
             log_entries = [json.loads(line) for line in f if line.strip()]
 
@@ -101,6 +119,8 @@ class main_window(QMainWindow):
 
         self.log_name = labels_new
         self.size_log = sizes_new
+
+        self.count_chart = self.count_chart + 1
 
 
 
@@ -166,7 +186,6 @@ class main_window(QMainWindow):
         self.ftp.itemSelectionChanged.connect(self.handle_row_selection3)
 
         self.ied_json_display = self.findChild(QLabel,"ied_json_display")
-        self.set_dummy_data()
 
         self.set_ftp_table()
         self.ied_data()
@@ -221,6 +240,11 @@ class main_window(QMainWindow):
 
 
     def set_ftp_table(self):
+        # print(f"Ran ftp data - {self.count_ftp}")
+        self.latest_logs_ftp = []
+
+        self.ftp.setRowCount(0)
+
             # Load logs from JSON file
         logs = []
         with open("final_ftp_log.json", "r") as f:
@@ -240,15 +264,13 @@ class main_window(QMainWindow):
         "High_Risk": QColor(241, 103, 103, 150),
         }
 
-        
-
-
-
         # Sort logs by timestamp (latest first)
         logs_sorted = sorted(logs, key=lambda x: x.get("timestamp", ""), reverse=True)
 
         # Pick latest 4 logs
         self.latest_logs_ftp = logs_sorted[:4]
+
+        self.ftp.setRowCount(len(self.latest_logs_ftp))
 
         for row, log in enumerate(self.latest_logs_ftp):
             self.ftp.setItem(row, 0, QTableWidgetItem(log.get("timestamp", "")))
@@ -265,12 +287,18 @@ class main_window(QMainWindow):
                 if item:
                     item.setBackground(row_color)
 
-
+        self.count_ftp = self.count_ftp + 1
 
 
     def ied_data(self):
+        # print(f"Ran ied data - {self.count}")
+        self.latest_per_level = OrderedDict()
+
+        self.table1.setRowCount(0)
+        self.table2.setRowCount(0)
+
         logs = []
-        with open("ied_log.json", "r") as f:
+        with open("goose_log.json", "r") as f:
             for line in f:
                 if line.strip():
                     data = json.loads(line)
@@ -296,8 +324,15 @@ class main_window(QMainWindow):
             if level not in self.latest_per_level:
                 self.latest_per_level[level] = entry
 
+        entries = list(self.latest_per_level.values())
 
-        for row, entry in enumerate(self.latest_per_level.values()):
+        # Adjust row count before inserting
+        self.table1.setRowCount(len(entries))
+        self.table2.setRowCount(len(entries))
+
+
+        
+        for row, entry in enumerate(entries):
             self.table1.setItem(row, 0, QTableWidgetItem(entry.get("timestamp", "")))
             self.table1.setItem(row, 1, QTableWidgetItem(entry.get("goose-type", "")))
             self.table1.setItem(row, 2, QTableWidgetItem(entry.get("message", "")))
@@ -309,53 +344,56 @@ class main_window(QMainWindow):
         self.set_colors_ied_1()
         self.set_colors_ied_2()
 
-    def set_dummy_data(self):
-         # Add 3 rows of example data
-        data = [
-            ("10:01 AM", "INFO", "Startup complete"),
-            ("10:05 AM", "WARNING", "Voltage spike detected"),
-            ("10:10 AM", "other", "Connection lost")
-        ]
-
-        for row_index, (time, type_, message) in enumerate(data):
-            self.table1.setItem(row_index, 0, QTableWidgetItem(time))
-            self.table1.setItem(row_index, 1, QTableWidgetItem(type_))
-            self.table1.setItem(row_index, 2, QTableWidgetItem(message))
-
-            self.table2.setItem(row_index, 0, QTableWidgetItem(time))
-            self.table2.setItem(row_index, 1, QTableWidgetItem(type_))
-            self.table2.setItem(row_index, 2, QTableWidgetItem(message))
+        self.count = self.count +1
 
     def handle_row_selection1(self):
         selected_indexes = self.table1.selectionModel().selectedRows()
     
-        if selected_indexes:
-            row = selected_indexes[0].row()
-            
-        message = self.table2.item(row, 1).text()
-
+        if not selected_indexes:
+            # No row selected, do something safe, e.g. clear display
+            self.ied_json_display.clear()
+            return
+    
+        row = selected_indexes[0].row()
+        item = self.table1.item(row, 1)
+        if item is None:
+            # No valid item, handle gracefully
+            self.ied_json_display.clear()
+            return
+    
+        message = item.text()
         self.ied_json_display.setText(f"{self.latest_per_level[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:blue;")
+
 
 
     def handle_row_selection2(self):
         selected_indexes = self.table2.selectionModel().selectedRows()
     
-        if selected_indexes:
-            row = selected_indexes[0].row()
-
-
-        message = self.table2.item(row, 1).text()
-
+        if not selected_indexes:
+            # No row selected, do something safe, e.g. clear display
+            self.ied_json_display.clear()
+            return
+    
+        row = selected_indexes[0].row()
+        item = self.table2.item(row, 1)
+        if item is None:
+            # No valid item, handle gracefully
+            self.ied_json_display.clear()
+            return
+    
+        message = item.text()
         self.ied_json_display.setText(f"{self.latest_per_level[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:green;")
 
-        
    
 
 
     def handle_row_selection3(self):
         selected_indexes = self.ftp.selectionModel().selectedRows()
+        if not selected_indexes:
+        # No row selected, just return safely
+            return
     
         if selected_indexes:
             row = selected_indexes[0].row()
