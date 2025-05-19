@@ -30,11 +30,7 @@ class main_window(QMainWindow):
 
         self.refresh_timer = QTimer(self)
         self.refresh_timer.timeout.connect(self.refreshing_dashboard)
-        self.refresh_timer.start(3000) # in ms
-
-        self.chart_timer = QTimer(self)
-        self.chart_timer.timeout.connect(self.ied_data)
-        self.chart_timer.start(3000) # in ms
+        self.refresh_timer.start(50) # in ms
    
 
         self.show()
@@ -99,7 +95,7 @@ class main_window(QMainWindow):
      
 
     def init_pie_content(self):
-        print(f"Refreshing graph {self.count_chart}")
+        # print(f"Refreshing graph {self.count_chart}")
         log_entries = []
         with open("final_ftp_log.json", "r") as f:
             log_entries = [json.loads(line) for line in f if line.strip()]
