@@ -155,7 +155,7 @@ class main_window(QMainWindow):
         self.ftp.setColumnWidth(0, 180)  # Time Stamp
         self.ftp.setColumnWidth(1, 80)   # Type
         self.ftp.setColumnWidth(2, 263)  # Message (wider)
-        self.ftp.setColumnWidth(3, 80)
+        self.ftp.setColumnWidth(3, 100)
         self.ftp.setColumnWidth(4, 85)  
 
         # Stretch message column
