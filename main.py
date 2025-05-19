@@ -30,7 +30,7 @@ class main_window(QMainWindow):
 
         self.refresh_timer = QTimer(self)
         self.refresh_timer.timeout.connect(self.refreshing_dashboard)
-        self.refresh_timer.start(50) # in ms
+        self.refresh_timer.start(5000) # in ms
    
 
         self.show()
@@ -188,10 +188,10 @@ class main_window(QMainWindow):
 
     
     def set_colors_ied_1(self):
-        row_colors = [
-            QColor(202, 240, 248), # light blue
+        row_colors = [QColor(255, 243, 176),
+             # light blue
         QColor(144, 224, 239),  
-        QColor(0, 180, 216),  # darker yellow
+        QColor(231, 198, 255) # darker yellow
         ]
 
         for row in range(self.table1.rowCount() + 1):
@@ -204,10 +204,10 @@ class main_window(QMainWindow):
 
 
     def set_colors_ied_2(self):
-        row_colors = [
-            QColor(236, 250, 229), # pista green
-        QColor(221, 246, 210),  
-        QColor(202, 232, 189),  # military green
+        row_colors = [QColor(255, 243, 176),
+             # light blue
+        QColor(144, 224, 239),  
+        QColor(231, 198, 255) # darker yellow
         ]
 
         for row in range(self.table1.rowCount() + 1):
