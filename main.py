@@ -38,14 +38,16 @@ class main_window(QMainWindow):
     def init_default(self):
         self.log_name = []
         self.size_log = []
-        self.latest_per_level = OrderedDict()
+        self.latest_per_level_1 = OrderedDict()
+        self.latest_per_level_2 = OrderedDict()
         self.latest_logs_ftp = []
         self.count = 1
         self.count_chart = 1
         self.count_ftp = 1
 
     def refreshing_dashboard(self):
-        self.ied_data()
+        self.ied1_data()
+        self.ied2_data()
         self.set_ftp_table()
         self.init_pie_content()
         self.set_chart()
@@ -95,17 +97,35 @@ class main_window(QMainWindow):
      
 
     def init_pie_content(self):
-        # print(f"Refreshing graph {self.count_chart}")
-        log_entries = []
         with open("final_ftp_log.json", "r") as f:
-            log_entries = [json.loads(line) for line in f if line.strip()]
+            content = f.read().strip()
+
+        decoder = json.JSONDecoder()
+        idx = 0
+        n = len(content)
+        log_entries = []
+
+        while idx < n:
+            try:
+                obj, end = decoder.raw_decode(content, idx)
+                log_entries.append(obj)
+                idx = end
+                while idx < n and content[idx].isspace():
+                    idx += 1
+            except json.JSONDecodeError:
+                break  # or handle error
 
 
-        labels = []
 
-        for i in log_entries[0]:
-            labels.append(i['level'])
+    # If each entry is a list of dicts, flatten them
+        flattened_items = []
+        for entry in log_entries:
+            if isinstance(entry, list):
+                flattened_items.extend(entry)
+            elif isinstance(entry, dict):
+                flattened_items.append(entry)
 
+        labels = [item.get('level') for item in flattened_items if 'level' in item]
         
         level_counts = Counter(labels)
 
@@ -184,7 +204,8 @@ class main_window(QMainWindow):
         self.ied_json_display = self.findChild(QLabel,"ied_json_display")
 
         self.set_ftp_table()
-        self.ied_data()
+        self.ied1_data()
+        self.ied2_data()
 
     
     def set_colors_ied_1(self):
@@ -238,19 +259,28 @@ class main_window(QMainWindow):
     def set_ftp_table(self):
         # print(f"Ran ftp data - {self.count_ftp}")
         self.latest_logs_ftp = []
-
         self.ftp.setRowCount(0)
 
-            # Load logs from JSON file
-        logs = []
         with open("final_ftp_log.json", "r") as f:
-            for line in f:
-                if line.strip():
-                    data = json.loads(line)
-                    if isinstance(data, list):
-                        logs.extend(data)  # flatten the list
-                    elif isinstance(data, dict):
-                        logs.append(data)
+            content = f.read().strip()
+
+        decoder = json.JSONDecoder()
+        idx = 0
+        n = len(content)
+        logs = []
+
+        while idx < n:
+            try:
+                obj, end = decoder.raw_decode(content, idx)
+                if isinstance(obj, list):
+                    logs.extend(obj)  # flatten if list
+                elif isinstance(obj, dict):
+                    logs.append(obj)
+                idx = end
+                while idx < n and content[idx].isspace():
+                    idx += 1
+            except json.JSONDecodeError:
+                break  # or handle error as needed
 
 
         level_color_map = {
@@ -286,22 +316,31 @@ class main_window(QMainWindow):
         self.count_ftp = self.count_ftp + 1
 
 
-    def ied_data(self):
+    def ied1_data(self):
         # print(f"Ran ied data - {self.count}")
-        self.latest_per_level = OrderedDict()
+        self.latest_per_level_1 = OrderedDict()
 
         self.table1.setRowCount(0)
-        self.table2.setRowCount(0)
 
         logs = []
-        with open("goose_log.json", "r") as f:
-            for line in f:
-                if line.strip():
-                    data = json.loads(line)
-                    if isinstance(data, list):
-                        logs.extend(data)  # flatten the list
-                    elif isinstance(data, dict):
-                        logs.append(data)
+        with open("goose_log_1.json", "r") as f:
+            content = f.read().strip()
+
+        decoder = json.JSONDecoder()
+        idx = 0
+        n = len(content)
+    
+        while idx < n:
+            try:
+                obj, end = decoder.raw_decode(content, idx)
+                logs.append(obj)
+                idx = end
+                # Skip any whitespace between JSON objects
+                while idx < n and content[idx].isspace():
+                    idx += 1
+            except json.JSONDecodeError:
+            # If you want to handle or report errors
+                break
 
 
         # Parse and sort logs by timestamp (newest first)
@@ -317,14 +356,14 @@ class main_window(QMainWindow):
         
         for entry in logs_sorted:
             level = entry.get("goose-type", "UNKNOWN")
-            if level not in self.latest_per_level:
-                self.latest_per_level[level] = entry
+            if level not in self.latest_per_level_1:
+                self.latest_per_level_1[level] = entry
 
-        entries = list(self.latest_per_level.values())
+        entries = list(self.latest_per_level_1.values())
 
         # Adjust row count before inserting
         self.table1.setRowCount(len(entries))
-        self.table2.setRowCount(len(entries))
+   
 
 
         
@@ -333,11 +372,72 @@ class main_window(QMainWindow):
             self.table1.setItem(row, 1, QTableWidgetItem(entry.get("goose-type", "")))
             self.table1.setItem(row, 2, QTableWidgetItem(entry.get("message", "")))
 
+        
+        self.set_colors_ied_1()
+
+        self.count = self.count +1
+
+
+    def ied2_data(self):
+        # print(f"Ran ied data - {self.count}")
+        self.latest_per_level_2 = OrderedDict()
+
+     
+        self.table2.setRowCount(0)
+
+        logs = []
+        with open("goose_log_1.json", "r") as f:
+            content = f.read().strip()
+
+        decoder = json.JSONDecoder()
+        idx = 0
+        n = len(content)
+    
+        while idx < n:
+            try:
+                obj, end = decoder.raw_decode(content, idx)
+                logs.append(obj)
+                idx = end
+                # Skip any whitespace between JSON objects
+                while idx < n and content[idx].isspace():
+                    idx += 1
+            except json.JSONDecodeError:
+            # If you want to handle or report errors
+                break
+
+
+        # Parse and sort logs by timestamp (newest first)
+        def parse_time(entry):
+            try:
+                return datetime.fromisoformat(entry.get("timestamp", ""))
+            except ValueError:
+                return datetime.min
+
+        logs_sorted = sorted(logs, key=parse_time, reverse=True)
+
+        # Track seen levels and keep only the first (latest) entry per level
+        
+        for entry in logs_sorted:
+            level = entry.get("goose-type", "UNKNOWN")
+            if level not in self.latest_per_level_2:
+                self.latest_per_level_2[level] = entry
+
+        entries = list(self.latest_per_level_2.values())
+
+        # Adjust row count before inserting
+     
+        self.table2.setRowCount(len(entries))
+
+
+        
+        for row, entry in enumerate(entries):
+         
+
             self.table2.setItem(row, 0, QTableWidgetItem(entry.get("timestamp", "")))
             self.table2.setItem(row, 1, QTableWidgetItem(entry.get("goose-type", "")))
             self.table2.setItem(row, 2, QTableWidgetItem(entry.get("message", "")))
         
-        self.set_colors_ied_1()
+     
         self.set_colors_ied_2()
 
         self.count = self.count +1
