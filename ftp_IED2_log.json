@@ -1,0 +1,178 @@
+[
+  {
+    "timestamp": "2025-05-27T08:47:34",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "FTP server started on 192.168.1.202:21",
+    "Attacker IP": null,
+    "Attacker Port": null
+  },
+  {
+    "timestamp": "2025-05-27T08:48:19",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "Connection from 192.168.1.210:54572",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:19",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Target device hostname: None",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:24",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "USER command received, Target trying to connect.",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:24",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "Username 'user' accepted",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:26",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "Password Auth: login using user:pass",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:26",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Unknown command: SYST",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:26",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Unknown command: FEAT",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:27",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Unknown command: EPSV",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:27",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Unknown command: PASV",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:27",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "LIST command: Target viewing all files/directories",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:35",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to reg",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:37",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "LIST command: Target viewing all files/directories",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:48:40",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to ..",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:49:58",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to ..",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:50:06",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to ..",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:50:12",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to ..",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:50:14",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "LIST command: Target viewing all files/directories",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:51:21",
+    "Protocol": "FTP",
+    "level": "High_Risk",
+    "message": "CWD command: changing to dbs",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:51:23",
+    "Protocol": "FTP",
+    "level": "Medium_Risk",
+    "message": "LIST command: Target viewing all files/directories",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:51:58",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "FTP Session closed by client",
+    "Attacker IP": "192.168.1.210",
+    "Attacker Port": 54572
+  },
+  {
+    "timestamp": "2025-05-27T08:52:15",
+    "Protocol": "FTP",
+    "level": "Low_Risk",
+    "message": "Shutting down FTP trap server",
+    "Attacker IP": null,
+    "Attacker Port": null
+  }
+]

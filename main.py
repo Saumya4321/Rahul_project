@@ -97,23 +97,8 @@ class main_window(QMainWindow):
      
 
     def init_pie_content(self):
-        with open("final_ftp_log.json", "r") as f:
-            content = f.read().strip()
-
-        decoder = json.JSONDecoder()
-        idx = 0
-        n = len(content)
-        log_entries = []
-
-        while idx < n:
-            try:
-                obj, end = decoder.raw_decode(content, idx)
-                log_entries.append(obj)
-                idx = end
-                while idx < n and content[idx].isspace():
-                    idx += 1
-            except json.JSONDecodeError:
-                break  # or handle error
+        with open("ftp_IED1_log.json", "r") as f:
+            log_entries = json.load(f)
 
 
 
@@ -261,27 +246,9 @@ class main_window(QMainWindow):
         self.latest_logs_ftp = []
         self.ftp.setRowCount(0)
 
-        with open("final_ftp_log.json", "r") as f:
-            content = f.read().strip()
-
-        decoder = json.JSONDecoder()
-        idx = 0
-        n = len(content)
-        logs = []
-
-        while idx < n:
-            try:
-                obj, end = decoder.raw_decode(content, idx)
-                if isinstance(obj, list):
-                    logs.extend(obj)  # flatten if list
-                elif isinstance(obj, dict):
-                    logs.append(obj)
-                idx = end
-                while idx < n and content[idx].isspace():
-                    idx += 1
-            except json.JSONDecodeError:
-                break  # or handle error as needed
-
+        with open("ftp_IED1_log.json", "r") as f:
+            logs = json.load(f)
+        
 
         level_color_map = {
         "Low_Risk": QColor(255, 240, 133, 150),
@@ -323,24 +290,9 @@ class main_window(QMainWindow):
         self.table1.setRowCount(0)
 
         logs = []
-        with open("goose_log_1.json", "r") as f:
-            content = f.read().strip()
+        with open("goose_IED1_log.json", "r") as f:
+            logs = json.load(f)
 
-        decoder = json.JSONDecoder()
-        idx = 0
-        n = len(content)
-    
-        while idx < n:
-            try:
-                obj, end = decoder.raw_decode(content, idx)
-                logs.append(obj)
-                idx = end
-                # Skip any whitespace between JSON objects
-                while idx < n and content[idx].isspace():
-                    idx += 1
-            except json.JSONDecodeError:
-            # If you want to handle or report errors
-                break
 
 
         # Parse and sort logs by timestamp (newest first)
@@ -386,24 +338,8 @@ class main_window(QMainWindow):
         self.table2.setRowCount(0)
 
         logs = []
-        with open("goose_log_1.json", "r") as f:
-            content = f.read().strip()
-
-        decoder = json.JSONDecoder()
-        idx = 0
-        n = len(content)
-    
-        while idx < n:
-            try:
-                obj, end = decoder.raw_decode(content, idx)
-                logs.append(obj)
-                idx = end
-                # Skip any whitespace between JSON objects
-                while idx < n and content[idx].isspace():
-                    idx += 1
-            except json.JSONDecodeError:
-            # If you want to handle or report errors
-                break
+        with open("goose_IED2_log.json", "r") as f:
+            logs = json.load(f)
 
 
         # Parse and sort logs by timestamp (newest first)

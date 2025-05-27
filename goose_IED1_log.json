@@ -1,0 +1,163 @@
+[
+  {
+    "timestamp": "2025-05-16 15:30:19",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "overcurrent_trip_cond changed to: true (previous: false)"
+  },
+  {
+    "timestamp": "2025-05-16 15:41:38",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "overcurrent_trip_cond changed to: true (previous: false)"
+  },
+  {
+    "timestamp": "2025-05-16 15:41:45",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "overcurrent_trip_cond changed to: false (previous: true)"
+  },
+  {
+    "timestamp": "2025-05-16 15:41:45",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "power_supply_alarm changed to: true (previous: false)"
+  },
+  {
+    "timestamp": "2025-05-16 15:41:54",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "power_supply_alarm changed to: false (previous: true)"
+  },
+  {
+    "timestamp": "2025-05-16 15:41:54",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "power_supply_Tx changed to: true (previous: false)"
+  },
+  {
+    "timestamp": "2025-05-16 15:42:01",
+    "Protocol": "GOOSE",
+    "goose-type": "alarm",
+    "IED_Number": "IED2",
+    "message": "power_supply_Tx changed to: false (previous: true)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:06",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_A changed to: 340.000000 (previous: 310.000000)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:20",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_B changed to: 340.000000 (previous: 310.000000)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:39",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_A changed to: 310.000000 (previous: 340.000000)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:39",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_B changed to: 310.000000 (previous: 340.000000)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:39",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_C changed to: 355.000000 (previous: 310.000000)"
+  },
+  {
+    "timestamp": "2025-05-16 15:43:45",
+    "Protocol": "GOOSE",
+    "goose-type": "measure",
+    "IED_Number": "IED2",
+    "message": "phase-current_C changed to: 310.000000 (previous: 355.000000)"
+  },
+  {
+    "timestamp": "2025-05-19 11:53:47",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "XCBR_position changed to: 0 (previous: 1)"
+  },
+  {
+    "timestamp": "2025-05-19 11:53:52",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "XCBR_position changed to: 1 (previous: 0)"
+  },
+  {
+    "timestamp": "2025-05-19 11:53:52",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "XCBR_location changed to: false (previous: true)"
+  },
+  {
+    "timestamp": "2025-05-19 11:53:58",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "switch_position changed to: 0 (previous: 1)"
+  },
+  {
+    "timestamp": "2025-05-19 11:53:58",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "Switch_location changed to: 0 (previous: 1)"
+  },
+  {
+    "timestamp": "2025-05-19 11:54:04",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "switch_position changed to: 1 (previous: 0)"
+  },
+  {
+    "timestamp": "2025-05-19 11:54:04",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "Switch_location changed to: 1 (previous: 0)"
+  },
+  {
+    "timestamp": "2025-05-19 11:54:04",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "XCBR_location changed to: true (previous: false)"
+  },
+  {
+    "timestamp": "2025-05-19 11:54:09",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "protection_health changed to: 1 (previous: 0)"
+  },
+  {
+    "timestamp": "2025-05-19 11:54:17",
+    "Protocol": "GOOSE",
+    "goose-type": "status",
+    "IED_Number": "IED2",
+    "message": "protection_health changed to: 0 (previous: 1)"
+  }
+]
