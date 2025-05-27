@@ -394,7 +394,7 @@ class main_window(QMainWindow):
             return
     
         message = item.text()
-        self.ied_json_display.setText(f"{self.latest_per_level[message]}")
+        self.ied_json_display.setText(f"{self.latest_per_level_1[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:blue;")
 
 
@@ -415,7 +415,7 @@ class main_window(QMainWindow):
             return
     
         message = item.text()
-        self.ied_json_display.setText(f"{self.latest_per_level[message]}")
+        self.ied_json_display.setText(f"{self.latest_per_level_2[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:green;")
 
    
