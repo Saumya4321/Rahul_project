@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QTableWidgetItem
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton
 from PyQt5.QtChart import QChart, QChartView, QPieSeries
-from PyQt5.QtGui import QPainter
+from PyQt5.QtGui import QPainter, QFont
 from PyQt5.QtCore import Qt, QTimer
 import json
 from collections import Counter
@@ -60,8 +60,13 @@ class main_window(QMainWindow):
         self.series = QPieSeries()
         self.chart = QChart()
         self.chart.addSeries(self.series)
-        self.chart.setTitle("Log Distribution")
-        self.chart.legend().setAlignment(Qt.AlignBottom)
+        # self.chart.setTitle("Log Distribution")
+        # self.chart.legend().setAlignment(Qt.AlignBottom)
+        # self.chart.legend().hide()
+        # Set legend font size
+        legend_font = QFont()
+        legend_font.setPointSize(18)
+        self.chart.legend().setFont(legend_font)
 
         self.chart_view = QChartView(self.chart)
         self.chart_view.setRenderHint(QPainter.Antialiasing)
@@ -92,7 +97,7 @@ class main_window(QMainWindow):
             if label in label_color_map:
                 slice.setBrush(label_color_map[label])
 
-            slice.setLabelVisible(True)
+            slice.setLabelVisible(False)
 
      
 
