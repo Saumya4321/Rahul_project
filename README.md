@@ -1,2 +1,3 @@
 # Dashboard
-![Screenshot 2025-05-19 133528](https://github.com/user-attachments/assets/75f03206-81d9-4dea-b383-35d4ce14ac8c)
+![image](https://github.com/user-attachments/assets/2bd3aa45-f005-4a3b-95bb-782fcf84c977)
+
