@@ -41,14 +41,17 @@ class main_window(QMainWindow):
         self.latest_per_level_1 = OrderedDict()
         self.latest_per_level_2 = OrderedDict()
         self.latest_logs_ftp = []
+        self.latest_logs_ssh = []
         self.count = 1
         self.count_chart = 1
         self.count_ftp = 1
+        self.count_ssh = 1
 
     def refreshing_dashboard(self):
         self.ied1_data()
         self.ied2_data()
         self.set_ftp_table()
+        self.set_ssh_table()
         self.init_pie_content()
         self.set_chart()
 
@@ -60,7 +63,7 @@ class main_window(QMainWindow):
         self.series = QPieSeries()
         self.chart = QChart()
         self.chart.addSeries(self.series)
-        self.chart.setTitle("Log Distribution")
+        self.chart.setTitle("Distribution of Logs")
         self.chart.legend().setAlignment(Qt.AlignBottom)
 
         self.chart_view = QChartView(self.chart)
@@ -97,18 +100,18 @@ class main_window(QMainWindow):
      
 
     def init_pie_content(self):
-        with open("ftp_IED1_log.json", "r") as f:
-            log_entries = json.load(f)
+        with open("ftp_IED1_log.json", "r") as f1, open("ftp_IED2_log.json", "r") as f2:
+            log_entries1 = json.load(f1)
+            log_entries2 = json.load(f2)
 
-
-
-    # If each entry is a list of dicts, flatten them
+        # Flatten entries from both files
         flattened_items = []
-        for entry in log_entries:
-            if isinstance(entry, list):
-                flattened_items.extend(entry)
-            elif isinstance(entry, dict):
-                flattened_items.append(entry)
+        for log_entries in [log_entries1, log_entries2]:
+            for entry in log_entries:
+                if isinstance(entry, list):
+                    flattened_items.extend(entry)
+                elif isinstance(entry, dict):
+                    flattened_items.append(entry)
 
         labels = [item.get('level') for item in flattened_items if 'level' in item]
         
@@ -133,10 +136,11 @@ class main_window(QMainWindow):
         self.table1 = self.findChild(QTableWidget, "ied1")
         self.table2 = self.findChild(QTableWidget, "ied2")
         self.ftp = self.findChild(QTableWidget, "ftp")
+        self.ssh = self.findChild(QTableWidget,"ssh")
 
         self.table1.setColumnWidth(0, 120)  # Time Stamp
         self.table1.setColumnWidth(1, 80)   # Type
-        self.table1.setColumnWidth(2, 263)  # Message (wider)
+        self.table1.setColumnWidth(2, 460)  # Message (wider)
 
         # Stretch message column
         row_height = 25
@@ -148,7 +152,7 @@ class main_window(QMainWindow):
 
         self.table2.setColumnWidth(0, 120)  # Time Stamp
         self.table2.setColumnWidth(1, 80)   # Type
-        self.table2.setColumnWidth(2, 263)  # Message (wider)
+        self.table2.setColumnWidth(2, 460)  # Message (wider)
 
         # Stretch message column
         row_height = 25
@@ -163,32 +167,44 @@ class main_window(QMainWindow):
         self.ftp.setColumnWidth(3, 100)
         self.ftp.setColumnWidth(4, 85)  
 
+        self.ssh.setColumnWidth(0, 180)  # Time Stamp
+        self.ssh.setColumnWidth(1, 80)   # Type
+        self.ssh.setColumnWidth(2, 263)  # Message (wider)
+        self.ssh.setColumnWidth(3, 100)
+        self.ssh.setColumnWidth(4, 85)
+
+
         # Stretch message column
         row_height = 25
         header_height = self.ftp.horizontalHeader().height()
         total_height = row_height * (self.ftp.rowCount() + 1) + header_height + 1  # +2 for border maybe
 
         self.ftp.setFixedHeight(total_height)
+        self.ssh.setFixedHeight(total_height)
 
 
         # Select entire rows instead of individual cells
         self.table1.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.table2.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.ftp.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.ssh.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
 
         # Optional: Allow only single row selection at a time
         self.table1.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.table2.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.ftp.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.ssh.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
         # Connect selection change to handler
         self.table1.itemSelectionChanged.connect(self.handle_row_selection1)
         self.table2.itemSelectionChanged.connect(self.handle_row_selection2)
         self.ftp.itemSelectionChanged.connect(self.handle_row_selection3)
+        self.ssh.itemSelectionChanged.connect(self.handle_row_selection4)
 
         self.ied_json_display = self.findChild(QLabel,"ied_json_display")
 
         self.set_ftp_table()
+        self.set_ssh_table()
         self.ied1_data()
         self.ied2_data()
 
@@ -281,6 +297,48 @@ class main_window(QMainWindow):
                     item.setBackground(row_color)
 
         self.count_ftp = self.count_ftp + 1
+
+
+    def set_ssh_table(self):
+        # print(f"Ran ftp data - {self.count_ftp}")
+        self.latest_logs_ssh = []
+        self.ssh.setRowCount(0)
+
+        with open("ftp_IED2_log.json", "r") as f:
+            logs = json.load(f)
+        
+
+        level_color_map = {
+        "Low_Risk": QColor(255, 240, 133, 150),
+        "Medium_Risk": QColor(255, 214, 10, 150),
+        "Error": QColor(250, 129, 47, 150),
+        "High_Risk": QColor(241, 103, 103, 150),
+        }
+
+        # Sort logs by timestamp (latest first)
+        logs_sorted = sorted(logs, key=lambda x: x.get("timestamp", ""), reverse=True)
+
+        # Pick latest 4 logs
+        self.latest_logs_ssh = logs_sorted[:4]
+
+        self.ssh.setRowCount(len(self.latest_logs_ssh))
+
+        for row, log in enumerate(self.latest_logs_ssh):
+            self.ssh.setItem(row, 0, QTableWidgetItem(log.get("timestamp", "")))
+            self.ssh.setItem(row, 1, QTableWidgetItem(log.get("level", "")))
+            self.ssh.setItem(row, 2, QTableWidgetItem(log.get("message", "")))
+            self.ssh.setItem(row, 3, QTableWidgetItem(str(log.get("Attacker IP", ""))))
+            self.ssh.setItem(row, 4, QTableWidgetItem(str(log.get("Attacker Port", ""))))
+
+            # Set background color based on level
+            level = log.get("level", "UNKNOWN")
+            row_color = level_color_map.get(level, QColor(240, 240, 240))  # fallback color
+            for col in range(self.ssh.columnCount()):
+                item = self.ssh.item(row, col)
+                if item:
+                    item.setBackground(row_color)
+
+        self.count_ssh = self.count_ssh + 1
 
 
     def ied1_data(self):
@@ -394,7 +452,7 @@ class main_window(QMainWindow):
             return
     
         message = item.text()
-        self.ied_json_display.setText(f"{self.latest_per_level[message]}")
+        self.ied_json_display.setText(f"{self.latest_per_level_1[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:blue;")
 
 
@@ -415,7 +473,7 @@ class main_window(QMainWindow):
             return
     
         message = item.text()
-        self.ied_json_display.setText(f"{self.latest_per_level[message]}")
+        self.ied_json_display.setText(f"{self.latest_per_level_2[message]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:green;")
 
    
@@ -434,6 +492,20 @@ class main_window(QMainWindow):
     def display_json3(self, row):
         self.ied_json_display.setText(f"{self.latest_logs_ftp[row-1]}")
         self.ied_json_display.setStyleSheet("background-color:white; color:#8D0B41;")
+
+    def handle_row_selection4(self):
+        selected_indexes = self.ssh.selectionModel().selectedRows()
+        if not selected_indexes:
+        # No row selected, just return safely
+            return
+    
+        if selected_indexes:
+            row = selected_indexes[0].row()
+        self.display_json4(row)
+
+    def display_json4(self, row):
+        self.ied_json_display.setText(f"{self.latest_logs_ssh[row-1]}")
+        self.ied_json_display.setStyleSheet("background-color:white; color:purple;")
 
 
 ########### main function ###########
